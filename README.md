@@ -1,6 +1,3 @@
 # logging
 
-Унифицированное логирование для проектов на go.
-
-Работа над ошибками и внедрением необходимой функциональности 
-ведётся в проекте JIRA https://jira.media-tel.ru/projects/MTGOLOG/.
+Unified logging wrapping uber.zap
