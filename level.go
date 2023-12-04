@@ -129,16 +129,6 @@ func (l Level) MarshalText() (text []byte, err error) {
 	}
 }
 
-// FirstOrDefaultLevel returns first specified level or DefaultLevel if empty levels list specified.
-func FirstOrDefaultLevel(levels ...Level) Level {
-	level := DefaultLevel
-	if len(levels) > 0 {
-		level = levels[0]
-	}
-
-	return level
-}
-
 // WithLevel adds specified level to configuration.
 func WithLevel(level Level) Option {
 	return func(c *Config) {

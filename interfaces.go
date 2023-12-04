@@ -1,5 +1,7 @@
 package logging
 
+import "context"
+
 // Logger defines default set of logging methods should provided by any logging backend.
 type Logger interface {
 	// Level returns current logger level.
@@ -57,4 +59,7 @@ type Logger interface {
 
 	// WithLevel provides a new logger instance inherit settings from parent except specified logging level.
 	WithLevel(level Level) Logger
+
+	// WithContext takes data from specified context. Uses configured ContextExtractorFunc's.
+	WithContext(ctx context.Context) Logger
 }

@@ -92,7 +92,6 @@ func NewLoggerCtx(ctx context.Context, levels ...Level) Logger {
 	mu.Lock()
 	backend := usingBackend
 	initialized := initDone
-	cfg := useConfig
 	mu.Unlock()
 
 	switch {
@@ -101,7 +100,7 @@ func NewLoggerCtx(ctx context.Context, levels ...Level) Logger {
 	case !initialized:
 		panic(fmt.Errorf("%w: init first", Error))
 	default:
-		return backend.NewLoggerCtx(ctx, levels...).WithKeys(cfg.contextKeys(ctx))
+		return backend.NewLoggerCtx(ctx, levels...)
 	}
 }
 
@@ -148,6 +147,6 @@ func NewNamedLoggerCtx(ctx context.Context, name string, levels ...Level) Logger
 	case !initialized:
 		panic(fmt.Errorf("%w: init first", Error))
 	default:
-		return backend.NewNamedLoggerCtx(ctx, name, cfg.levelForNamed(name, levels...)).WithKeys(cfg.contextKeys(ctx))
+		return backend.NewNamedLoggerCtx(ctx, name, cfg.levelForNamed(name, levels...))
 	}
 }

@@ -54,13 +54,13 @@ func TestConfig_UnmarshalYAML(t *testing.T) {
 		},
 		{
 			"stdout",
-			`output: stdout`,
+			`target: stdout`,
 			0, StdOut, "", emptyCustomLevels,
 			false,
 		},
 		{
 			"syslog",
-			`output: syslog`,
+			`target: syslog`,
 			0, SysLog, "", emptyCustomLevels,
 			false,
 		},
@@ -93,7 +93,7 @@ func TestConfig_UnmarshalYAML(t *testing.T) {
 			`
 level: info
 format: text
-output: stdout
+target: stdout
 customLevels: 
   traceLogger: trace
   debugLogger: debug
@@ -116,7 +116,7 @@ customLevels:
 			`
 level: warn
 format: text
-output: stdout
+target: stdout
 customLevels: 
   traceLogger: t
   debugLogger: d

@@ -3,11 +3,11 @@ package logging
 /* Config implements service logging configuration structure data.
 
 It can be loaded from YAML configuration file.
-Configuration structure in YAML should looks like:
+Configuration structure in YAML should be looks like:
 
 	level: [debug|info|warn|error]
 	format: [text|json]
-	output: [stdout|/path/to/file]
+	target: [stdout|stderr|syslog|/path/to/file]
 
 Default is output to console (stdout) and use text format on info level.
 
@@ -42,13 +42,13 @@ type Config struct {
 	// Output defines logging path.
 	// Can be absolute path to log into file or substituted with one of predefined StdOut or SysLog constants.
 	// Default StdOut.
-	Output Target `yaml:"output,omitempty"`
+	Output Target `yaml:"target,omitempty"`
 	// CustomLevels allows separate level definitions for named loggers using their names.
 	// Each specified level expected to be less verbose than global level defined in Config.Level attribute.
 	CustomLevels map[string]Level `yaml:"customLevels,omitempty"`
 
 	// contextExtractors registers extract context-provided data as fields
-	contextExtractors map[Key]ContextExtractorFun
+	contextExtractors map[Key]ContextExtractorFunc
 }
 
 // NewConfig creates new logging configuration with defaults set.
@@ -58,12 +58,12 @@ func NewConfig() *Config {
 		Output:            DefaultOutput,
 		Format:            DefaultFormat,
 		CustomLevels:      make(map[string]Level),
-		contextExtractors: make(map[Key]ContextExtractorFun),
+		contextExtractors: make(map[Key]ContextExtractorFunc),
 	}
 }
 
 // Validate checks logging config valid. Returns error if any misconfiguration detected.
-func (config Config) Validate() error {
+func (config *Config) Validate() error {
 	switch {
 	case config.Output == "":
 		return fmt.Errorf("%w: output empty, expected '%v', '%v' or absolute file path", Error, StdOut, SysLog)
@@ -91,7 +91,7 @@ func (config Config) Validate() error {
 }
 
 // String returns string representation of logging config.
-func (config Config) String() string {
+func (config *Config) String() string {
 
 	wrapValue := func(i string) string { return "'" + i + "'" }
 	add := func(n string, v string) string { return n + "=" + wrapValue(v) }
@@ -117,7 +117,7 @@ func (config Config) String() string {
 
 // levelForNamed returns configured level for named logger.
 // Returns first specified layer if no custom layer set for logger or config global layer.
-func (config Config) levelForNamed(name string, levels ...Level) Level {
+func (config *Config) levelForNamed(name string, levels ...Level) Level {
 	var (
 		customLevel Level
 		ok          bool

@@ -4,12 +4,12 @@ import (
 	"context"
 )
 
-// ContextExtractorFun is a function returning field name
-type ContextExtractorFun func(ctx context.Context) (Key, any)
+// ContextExtractorFunc is a function returning field name
+type ContextExtractorFunc func(ctx context.Context) (Key, any)
 
 // WithContextExtractors adds context value to logging field extraction functions to logging config.
 // Predefined Key's could be added with Key.Extractor method.
-func WithContextExtractors(extractors ...ContextExtractorFun) Option {
+func WithContextExtractors(extractors ...ContextExtractorFunc) Option {
 	return func(config *Config) {
 		ctx := context.Background()
 		for _, extractor := range extractors {
@@ -20,7 +20,7 @@ func WithContextExtractors(extractors ...ContextExtractorFun) Option {
 }
 
 // contextKeys extracts logging keys from context using set with WithContextExtractors.
-func (config Config) contextKeys(ctx context.Context) Keys {
+func (config *Config) contextKeys(ctx context.Context) Keys {
 	res := make(Keys, len(config.contextExtractors))
 	for _, e := range config.contextExtractors {
 		if k, v := e(ctx); v != nil {
@@ -49,8 +49,8 @@ func (k Key) getFromCtx(ctx context.Context) any {
 	return ctx.Value(k.loggingKey())
 }
 
-// Extractor returns ContextExtractorFun for Key.
-func (k Key) Extractor() ContextExtractorFun {
+// Extractor returns ContextExtractorFunc for Key.
+func (k Key) Extractor() ContextExtractorFunc {
 	return func(ctx context.Context) (Key, any) {
 		return k, k.getFromCtx(ctx)
 	}

@@ -1,6 +1,8 @@
 package logging
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 )
 
@@ -142,4 +144,10 @@ func (logger zapLogger) WithError(err error) Logger {
 		SugaredLogger: logger.SugaredLogger.WithOptions(zap.AddCaller()).With(zapField),
 		level:         logger.level,
 	}
+}
+
+// WithContext provides a new logger instance having keys extracted from context.
+// Utilizes ContextExtractorFunc set with init.
+func (logger zapLogger) WithContext(ctx context.Context) Logger {
+	return logger.WithKeys(KeysCtx(ctx))
 }

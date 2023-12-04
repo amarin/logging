@@ -82,7 +82,7 @@ func (backend *Backend) NewLoggerCtx(ctx context.Context, levels ...Level) Logge
 		_ = logger.Sync() //nolint:nolintlint,errcheck
 	}()
 
-	return logger
+	return logger.WithContext(ctx)
 }
 
 // NewNamedLogger initializes a new named logger.
@@ -113,7 +113,7 @@ func (backend *Backend) NewNamedLoggerCtx(ctx context.Context, name string, leve
 		_ = logger.Sync() //nolint:errcheck
 	}()
 
-	return logger
+	return logger.WithContext(ctx)
 }
 
 // makeEncoder makes a zapcore.Encoder for zapcore configuration.

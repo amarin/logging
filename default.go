@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"context"
 	"sync"
 )
 
@@ -40,6 +41,12 @@ func (l *Default) WithLevel(level Level) Logger {
 func (l *Default) WithName(name string) Logger {
 	l.checkInnerLogger()
 	return NewNamedLogger(name, useConfig.Level)
+}
+
+// WithContext provides a new logger instance with context data attached.
+func (l *Default) WithContext(ctx context.Context) Logger {
+	l.checkInnerLogger()
+	return NewLoggerCtx(ctx, useConfig.Level)
 }
 
 // Trace sends trace level data onto logging.
