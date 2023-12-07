@@ -1,5 +1,7 @@
 package logging
 
+import "context"
+
 const (
 	// KeyTimestamp defines logging key for timestamp registering.
 	KeyTimestamp Key = "ts"
@@ -26,3 +28,12 @@ func (k Key) String() string {
 // Keys simply wraps map[Key]interface{} to use in Logger.WithKeys.
 // It seems that logging.Keys is shorter than map[Key]interface{}.
 type Keys map[Key]any
+
+// SetToCtx injects keys values into context and returns updated context.
+func (keys Keys) SetToCtx(ctx context.Context) context.Context {
+	for k, v := range keys {
+		ctx = k.SetToCtx(ctx, v)
+	}
+
+	return ctx
+}
